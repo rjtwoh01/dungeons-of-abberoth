@@ -22,7 +22,12 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.Mouse0))
+        {
+            print("should be attacking");
+            animator.SetTrigger("swordAttack");
+        }
+        else if (Input.GetKey(KeyCode.Mouse0))
         {
             animator.SetTrigger("move");
             targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
