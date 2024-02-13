@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,11 +10,13 @@ public class Player : MonoBehaviour
 
     private BoxCollider2D boxCollider;
     private Rigidbody2D rb2D;
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        rb2D = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -21,10 +24,13 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
+            animator.SetTrigger("move");
             targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             targetPosition.z = 0f;
         }
 
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
+        rb2D.transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
+        animator.SetTrigger("idle");
     }
+
 }
