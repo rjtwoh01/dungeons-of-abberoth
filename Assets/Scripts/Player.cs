@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0))
         {
             print("should be attacking");
             //even if the player was moving to another point we still want to update
