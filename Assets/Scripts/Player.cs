@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     {
         rb2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        animator.SetTrigger("idle"); //just incase
     }
 
     // Update is called once per frame
@@ -25,6 +26,9 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.Mouse0))
         {
             print("should be attacking");
+            //even if the player was moving to another point we still want to update
+            //the target to be where we're trying to attack for a smoother experience
+            targetPosition = transform.position;
             animator.SetTrigger("swordAttack");
         }
         else if (Input.GetKey(KeyCode.Mouse0))
