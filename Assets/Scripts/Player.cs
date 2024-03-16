@@ -36,6 +36,7 @@ public class Player : MonoBehaviour
         }
 
         mainCamera = cameraGameObject.GetComponent<Camera>();
+        targetPosition = rb.transform.position;
     }
 
     // Update is called once per frame
@@ -88,7 +89,7 @@ public class Player : MonoBehaviour
     {
         // Delay for the duration of the attack animation or as needed
         // yield return new WaitForSeconds(attackDuration)(/*duration of the attack animation*/);
-        yield return new WaitForSecondsRealtime(attackDuration);
+        yield return new WaitForSeconds(attackDuration);
         isAttacking = false; // Reset the flag to indicate that the attack has finished
     }
 

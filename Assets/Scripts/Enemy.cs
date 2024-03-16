@@ -17,13 +17,18 @@ public class Enemy : MonoBehaviour
 
     private Rigidbody2D rb;
 
+    private HealthBar healthBar;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;
+        healthBar = GetComponentInChildren<HealthBar>();
+        print(healthBar);
 
         currentHealth = maxHealth;
+        healthBar.UpdateHealthBar((float)currentHealth, (float)maxHealth);
     }
 
     public void TakeDamage(int damage)
@@ -31,6 +36,7 @@ public class Enemy : MonoBehaviour
         print("taking damage! " + damage + " damage");
         currentHealth = currentHealth - damage;
         print("health: " + currentHealth);
+        healthBar.UpdateHealthBar((float)currentHealth, (float)maxHealth);
         if (currentHealth <= 0)
         {
             Destroy(gameObject);
@@ -40,10 +46,19 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (target == null)
+            return;
+
         currentDistance = Vector2.Distance(transform.position, target.transform.position);
+
+        print("current enemy distance: " + currentDistance + ", range: " + range + ", viewDistance: " + viewDistance + ", enemy position: " + transform.position + ", player position: " + target.transform.position);
+
+        print(target);
 
         if (currentDistance > range && currentDistance <= viewDistance)
         {
+            // Move towards the target's position continuously
+            print("should be moving");
             transform.position = Vector2.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
         }
     }

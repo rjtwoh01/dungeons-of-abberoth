@@ -104,6 +104,7 @@ MonoBehaviour:
   targetPosition: {x: -1.6100695, y: -1.5202234, z: 0}
   speed: 3
   attackRadius: 1.5
+  attackDuration: 1
 --- !u!50 &6456086691566728271
 Rigidbody2D:
   serializedVersion: 4
