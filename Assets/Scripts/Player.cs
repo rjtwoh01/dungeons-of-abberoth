@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
 {
     public Vector3 targetPosition;
     public float speed = 3.0f;
-    public float attackRadius = 0.75f;
+    public float attackRadius = 1.5f;
 
     private BoxCollider2D boxCollider;
     private Rigidbody2D rb;
@@ -15,13 +15,17 @@ public class Player : MonoBehaviour
     private GameObject cameraGameObject;
     private Camera mainCamera;
 
+    private bool isAttacking = false; // Flag to indicate whether an attack is in progress
+    [SerializeField]
+    private float attackDuration = 1f;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
-        animator.SetTrigger("idle"); //just incase
+        animator.SetTrigger("idle"); //just in case
 
         cameraGameObject = GameObject.FindGameObjectWithTag("MainCamera");
 
@@ -32,36 +36,27 @@ public class Player : MonoBehaviour
         }
 
         mainCamera = cameraGameObject.GetComponent<Camera>();
-        print(mainCamera);
-
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        // Vector2 mousePosition = Input.mousePosition;
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0))
+        if (!isAttacking && Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0))
         {
             Attack();
         }
-        else if (Input.GetKey(KeyCode.Mouse0))
+        else if (!isAttacking && Input.GetKey(KeyCode.Mouse0))
         {
             bool didAttack = false;
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero); // Casts a ray from mouse position
             if (hit.collider != null)
             {
-                print("We clicked something!" + hit);
                 float currentDistance = Vector2.Distance(transform.position, hit.transform.position);
                 if (hit.transform.CompareTag("enemy") && currentDistance <= attackRadius)
                 {
-                    Attack();
-                    didAttack = true;
-                }
-                else if (hit.transform.CompareTag("enemy") && currentDistance > attackRadius)
-                {
-                    Move();
-                    Attack();
+                    GameObject enemy = hit.collider.gameObject;
+                    Attack(enemy);
                     didAttack = true;
                 }
             }
@@ -72,13 +67,29 @@ public class Player : MonoBehaviour
         animator.SetTrigger("idle");
     }
 
-    private void Attack()
+    private void Attack(GameObject enemy = null)
     {
-        print("should be attacking");
-        //even if the player was moving to another point we still want to update
-        //the target to be where we're trying to attack for a smoother experience
+        isAttacking = true; // Set the flag to indicate that an attack is in progress
         targetPosition = transform.position;
         animator.SetTrigger("swordAttack");
+        if (enemy != null)
+        {
+            Enemy enemyScript = enemy.GetComponent<Enemy>();
+            if (enemyScript != null)
+            {
+                enemyScript.TakeDamage(5);
+            }
+        }
+        // Assuming the attack animation has a duration, you can reset the isAttacking flag after a delay
+        StartCoroutine(ResetAttackFlag());
+    }
+
+    IEnumerator ResetAttackFlag()
+    {
+        // Delay for the duration of the attack animation or as needed
+        // yield return new WaitForSeconds(attackDuration)(/*duration of the attack animation*/);
+        yield return new WaitForSecondsRealtime(attackDuration);
+        isAttacking = false; // Reset the flag to indicate that the attack has finished
     }
 
     private void Move()

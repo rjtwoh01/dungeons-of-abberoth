@@ -11,6 +11,9 @@ public class Enemy : MonoBehaviour
     private float currentDistance;
     [SerializeField]
     private float viewDistance = 5f;
+    [SerializeField]
+    private int maxHealth = 15;
+    public int currentHealth;
 
     private Rigidbody2D rb;
 
@@ -19,6 +22,19 @@ public class Enemy : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;
+
+        currentHealth = maxHealth;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        print("taking damage! " + damage + " damage");
+        currentHealth = currentHealth - damage;
+        print("health: " + currentHealth);
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     // Update is called once per frame
