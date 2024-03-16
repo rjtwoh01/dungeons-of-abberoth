@@ -12,14 +12,17 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float viewDistance = 5f;
 
+    private Rigidbody2D rb;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        rb = GetComponent<Rigidbody2D>();
+        rb.freezeRotation = true;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         currentDistance = Vector2.Distance(transform.position, target.transform.position);
 
@@ -27,5 +30,12 @@ public class Enemy : MonoBehaviour
         {
             transform.position = Vector2.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
         }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Freeze movement by setting velocity and angular velocity to zero
+        rb.velocity = Vector2.zero;
+        rb.angularVelocity = 0f;
     }
 }
