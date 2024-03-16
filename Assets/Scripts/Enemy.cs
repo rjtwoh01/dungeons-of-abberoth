@@ -9,6 +9,8 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float range = 0.75f;
     private float currentDistance;
+    [SerializeField]
+    private float viewDistance = 5f;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +23,7 @@ public class Enemy : MonoBehaviour
     {
         currentDistance = Vector2.Distance(transform.position, target.transform.position);
 
-        if (currentDistance > range)
+        if (currentDistance > range && currentDistance <= viewDistance)
         {
             transform.position = Vector2.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
         }
