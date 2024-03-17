@@ -19,6 +19,12 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float attackDuration = 1f;
 
+    [SerializeField]
+    private int maxHealth = 100;
+    private int currentHealth;
+
+    private HealthBar healthBar;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,6 +43,10 @@ public class Player : MonoBehaviour
 
         mainCamera = cameraGameObject.GetComponent<Camera>();
         targetPosition = rb.transform.position;
+
+        currentHealth = maxHealth;
+        healthBar = GetComponentInChildren<HealthBar>();
+        healthBar.UpdateHealthBar((float)currentHealth, (float)maxHealth);
     }
 
     // Update is called once per frame
@@ -105,5 +115,15 @@ public class Player : MonoBehaviour
         // Freeze movement by setting velocity and angular velocity to zero
         rb.velocity = Vector2.zero;
         rb.angularVelocity = 0f;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            print("you died sucka");
+        }
+        healthBar.UpdateHealthBar((float)currentHealth, (float)maxHealth);
     }
 }
