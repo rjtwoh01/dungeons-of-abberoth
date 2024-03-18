@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     private Camera mainCamera;
 
     private bool isAttacking = false; // Flag to indicate whether an attack is in progress
+    private bool isRespawning = false;
     [SerializeField]
     private float attackDuration = 1f;
 
@@ -24,6 +25,8 @@ public class Player : MonoBehaviour
     private int currentHealth;
 
     private HealthBar healthBar;
+
+    public GameObject playerSpawn;
 
     // Start is called before the first frame update
     void Start()
@@ -52,26 +55,29 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!isAttacking && Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0))
+        if (!isAttacking && !isRespawning)
         {
-            Attack();
-        }
-        else if (!isAttacking && Input.GetKey(KeyCode.Mouse0))
-        {
-            bool didAttack = false;
-            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero); // Casts a ray from mouse position
-            if (hit.collider != null)
+            if (!isAttacking && Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0))
             {
-                float currentDistance = Vector2.Distance(transform.position, hit.transform.position);
-                if (hit.transform.CompareTag("enemy") && currentDistance <= attackRadius)
-                {
-                    GameObject enemy = hit.collider.gameObject;
-                    Attack(enemy);
-                    didAttack = true;
-                }
+                Attack();
             }
-            if (!didAttack) Move();
+            else if (!isAttacking && Input.GetKey(KeyCode.Mouse0))
+            {
+                bool didAttack = false;
+                Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero); // Casts a ray from mouse position
+                if (hit.collider != null)
+                {
+                    float currentDistance = Vector2.Distance(transform.position, hit.transform.position);
+                    if (hit.transform.CompareTag("enemy") && currentDistance <= attackRadius)
+                    {
+                        GameObject enemy = hit.collider.gameObject;
+                        Attack(enemy);
+                        didAttack = true;
+                    }
+                }
+                if (!didAttack) Move();
+            }
         }
 
         rb.transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
@@ -103,6 +109,14 @@ public class Player : MonoBehaviour
         isAttacking = false; // Reset the flag to indicate that the attack has finished
     }
 
+    IEnumerator ResetRespawnTag()
+    {
+        // Delay for the duration of the attack animation or as needed
+        // yield return new WaitForSeconds(attackDuration)(/*duration of the attack animation*/);
+        yield return new WaitForSeconds(1);
+        isAttacking = false; // Reset the flag to indicate that the attack has finished
+    }
+
     private void Move()
     {
         animator.SetTrigger("move");
@@ -122,7 +136,11 @@ public class Player : MonoBehaviour
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
+            StartCoroutine(ResetRespawnTag());
             print("you died sucka");
+            targetPosition = playerSpawn.transform.position;
+            rb.transform.position = playerSpawn.transform.position;
+            currentHealth = maxHealth;
         }
         healthBar.UpdateHealthBar((float)currentHealth, (float)maxHealth);
     }
