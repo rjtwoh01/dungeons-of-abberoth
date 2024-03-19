@@ -47,6 +47,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI levelText;
 
+    [SerializeField]
+    private int damage = 5;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -121,7 +124,7 @@ public class Player : MonoBehaviour
             Enemy enemyScript = enemy.GetComponent<Enemy>();
             if (enemyScript != null)
             {
-                enemyScript.TakeDamage(5);
+                enemyScript.TakeDamage(damage);
             }
         }
         // Assuming the attack animation has a duration, you can reset the isAttacking flag after a delay
@@ -203,6 +206,10 @@ public class Player : MonoBehaviour
 
             if (levelUpText) levelUpText.enabled = true;
             if (levelText) levelText.text = level.ToString();
+            damage += 5;
+            maxHealth += 10;
+            currentHealth = maxHealth;
+            healthBar.UpdateHealthBar(currentHealth, maxHealth);
             StartCoroutine(ResetLevelUpText());
         }
         else
