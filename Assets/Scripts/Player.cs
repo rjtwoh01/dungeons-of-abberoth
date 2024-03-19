@@ -44,6 +44,9 @@ public class Player : MonoBehaviour
     private TextMeshProUGUI levelUpText;
     private int levelUpTextDuration = 3;
 
+    [SerializeField]
+    private TextMeshProUGUI levelText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -72,6 +75,7 @@ public class Player : MonoBehaviour
         healthBar.UpdateHealthBar((float)currentHealth, (float)maxHealth);
         xpBar.UpdateXpBar(xp, xpNeededToLevel);
         if (levelUpText) levelUpText.enabled = false;
+        if (levelText) levelText.text = level.ToString();
     }
 
     // Update is called once per frame
@@ -193,11 +197,12 @@ public class Player : MonoBehaviour
     {
         if (xp + newXp >= xpNeededToLevel)
         {
-            level++;
+            level += 1;
             xp = newXp - (xpNeededToLevel - xp);
             xpNeededToLevel = Convert.ToInt32(Math.Ceiling(1.5 * level)) + 100;
 
             if (levelUpText) levelUpText.enabled = true;
+            if (levelText) levelText.text = level.ToString();
             StartCoroutine(ResetLevelUpText());
         }
         else
