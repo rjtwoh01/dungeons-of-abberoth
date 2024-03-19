@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public GameObject target;
+    private GameObject target;
     public float speed = 2f;
     [SerializeField]
     private float range = 1f;
@@ -15,6 +15,7 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private int maxHealth = 15;
     public int currentHealth;
+    public int level = 1;
 
     private Rigidbody2D rb;
 
@@ -31,6 +32,9 @@ public class Enemy : MonoBehaviour
 
     private Animator animator;
 
+    [SerializeField]
+    private TextMeshProUGUI levelText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,7 +48,18 @@ public class Enemy : MonoBehaviour
 
         currentHealth = maxHealth;
         healthBar.UpdateHealthBar((float)currentHealth, (float)maxHealth);
+        if (levelText) levelText.text = level.ToString();
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player) SetTarget(player);
     }
+
+    public void SetTarget(GameObject newTarget)
+    {
+        print("setting target");
+        target = newTarget;
+    }
+
 
     public void TakeDamage(int damage)
     {

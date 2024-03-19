@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Dungeons of Abberoth.sln"
+    "dotnet.defaultSolution": "dungeons-of-abberoth.sln"
 }
