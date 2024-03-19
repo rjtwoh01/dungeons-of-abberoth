@@ -45,10 +45,14 @@ public class Player : MonoBehaviour
     private int levelUpTextDuration = 3;
 
     [SerializeField]
-    private TextMeshProUGUI levelText;
+    private TextMeshProUGUI levelText;   
+
+    private ManaBar manaBar;
 
     [SerializeField]
     private int damage = 5;
+    private int maxMana = 100;
+    private int currentMana = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -73,12 +77,15 @@ public class Player : MonoBehaviour
         targetPosition = rb.transform.position;
 
         currentHealth = maxHealth;
+        currentMana = maxMana;
         healthBar = GetComponentInChildren<HealthBar>();
         xpBar = GetComponentInChildren<XpBar>();
+        manaBar = GetComponentInChildren<ManaBar>();
         healthBar.UpdateHealthBar((float)currentHealth, (float)maxHealth);
         xpBar.UpdateXpBar(xp, xpNeededToLevel);
         if (levelUpText) levelUpText.enabled = false;
         if (levelText) levelText.text = level.ToString();
+        manaBar.UpdateManaBar(currentMana, maxMana);
     }
 
     // Update is called once per frame
@@ -108,6 +115,23 @@ public class Player : MonoBehaviour
                 }
                 if (!didAttack) Move();
             }
+            else if (Input.GetKey(KeyCode.Mouse1) && currentMana >= 25)
+            {
+                bool didAttack = false;
+                Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero); // Casts a ray from mouse position
+                if (hit.collider != null)
+                {
+                    float currentDistance = Vector2.Distance(transform.position, hit.transform.position);
+                    if (hit.transform.CompareTag("enemy") && currentDistance <= attackRadius)
+                    {
+                        GameObject enemy = hit.collider.gameObject;
+                        SpecialAttack(enemy);
+                        didAttack = true;
+                    }
+                }
+                if (!didAttack) Move();
+            }
         }
 
         rb.transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
@@ -125,6 +149,29 @@ public class Player : MonoBehaviour
             if (enemyScript != null)
             {
                 enemyScript.TakeDamage(damage);
+                currentMana += 25;
+                if (currentMana >= maxMana) currentMana = maxMana;
+                manaBar.UpdateManaBar(currentMana, maxMana);
+            }
+        }
+        // Assuming the attack animation has a duration, you can reset the isAttacking flag after a delay
+        StartCoroutine(ResetAttackFlag());
+    }
+
+    private void SpecialAttack(GameObject enemy = null) 
+    {
+        isAttacking = true; // Set the flag to indicate that an attack is in progress
+        targetPosition = transform.position;
+        animator.SetTrigger("swordAttack");
+        if (enemy != null)
+        {
+            Enemy enemyScript = enemy.GetComponent<Enemy>();
+            if (enemyScript != null)
+            {
+                enemyScript.TakeDamage(damage * 2);
+                currentMana -= 25;
+                if (currentMana <= 0) currentMana = 0;
+                manaBar.UpdateManaBar(currentMana, maxMana);
             }
         }
         // Assuming the attack animation has a duration, you can reset the isAttacking flag after a delay
@@ -208,8 +255,11 @@ public class Player : MonoBehaviour
             if (levelText) levelText.text = level.ToString();
             damage += 5;
             maxHealth += 10;
+            maxMana += 25;
             currentHealth = maxHealth;
+            currentMana = maxMana;
             healthBar.UpdateHealthBar(currentHealth, maxHealth);
+            manaBar.UpdateManaBar(currentMana, maxMana);
             StartCoroutine(ResetLevelUpText());
         }
         else
