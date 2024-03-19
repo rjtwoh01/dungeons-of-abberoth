@@ -4590,6 +4590,22 @@ PrefabInstance:
       propertyPath: viewDistance
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 5848022333665457603, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 149.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5848022333665457603, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 45.48
+      objectReference: {fileID: 0}
+    - target: {fileID: 5848022333665457603, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -98.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5848022333665457603, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000007391
+      objectReference: {fileID: 0}
     - target: {fileID: 8345230802118812926, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
