@@ -58,21 +58,21 @@ public class Enemy : MonoBehaviour
 
     private void Attack()
     {
-        animator.SetTrigger("attack");
-        isAttacking = true; // Set the flag to indicate that an attack is in progress
         print("isAttacking!");
         if (target != null)
         {
-            print(target);
             Player playerScript = target.GetComponent<Player>();
-            print(playerScript);
-            if (playerScript != null)
+            if (playerScript != null && playerScript.isAlive)
             {
+                animator.SetTrigger("attack");
+                isAttacking = true; // Set the flag to indicate that an attack is in progress
+                print(target);
+                print(playerScript);
                 playerScript.TakeDamage(damage);
+                StartCoroutine(ResetAttackFlag());
             }
         }
         // Assuming the attack animation has a duration, you can reset the isAttacking flag after a delay
-        StartCoroutine(ResetAttackFlag());
     }
 
     IEnumerator ResetAttackFlag()

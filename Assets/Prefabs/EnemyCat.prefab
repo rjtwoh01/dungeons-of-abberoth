@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 2624387856249665171}
   - component: {fileID: 746635645018547939}
   - component: {fileID: 3818270727248853085}
+  - component: {fileID: 8882774393783122023}
   m_Layer: 0
   m_Name: EnemyCat
   m_TagString: enemy
@@ -214,6 +215,29 @@ MonoBehaviour:
   viewDistance: 5
   maxHealth: 15
   currentHealth: 0
+  attackDuration: 2
+  damage: 5
+--- !u!95 &8882774393783122023
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1790463158902590964}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cf7e4257811ceca468f09d83d8fe9b27, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1913906317621010064
 GameObject:
   m_ObjectHideFlags: 0

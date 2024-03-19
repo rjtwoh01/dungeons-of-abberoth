@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -28,6 +29,11 @@ public class Player : MonoBehaviour
 
     public GameObject playerSpawn;
 
+    public GameObject deathPanel; // Reference to the UI canvas with death panel
+    public Button respawnButton; // Reference to the respawn button in the death panel
+
+    public bool isAlive = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +41,9 @@ public class Player : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
         animator.SetTrigger("idle"); //just in case
+        deathPanel.SetActive(false);
+        respawnButton.onClick.AddListener(RespawnPlayer);
+        print(respawnButton);
 
         cameraGameObject = GameObject.FindGameObjectWithTag("MainCamera");
 
@@ -55,13 +64,14 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!isAttacking && !isRespawning)
+        if (!isAttacking && !isRespawning && isAlive)
         {
-            if (!isAttacking && Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0))
             {
+                print("left shift and click attack");
                 Attack();
             }
-            else if (!isAttacking && Input.GetKey(KeyCode.Mouse0))
+            else if (Input.GetKey(KeyCode.Mouse0))
             {
                 bool didAttack = false;
                 Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -114,7 +124,7 @@ public class Player : MonoBehaviour
         // Delay for the duration of the attack animation or as needed
         // yield return new WaitForSeconds(attackDuration)(/*duration of the attack animation*/);
         yield return new WaitForSeconds(1);
-        isAttacking = false; // Reset the flag to indicate that the attack has finished
+        isRespawning = false; // Reset the flag to indicate that the attack has finished
     }
 
     private void Move()
@@ -136,12 +146,24 @@ public class Player : MonoBehaviour
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
-            StartCoroutine(ResetRespawnTag());
             print("you died sucka");
-            targetPosition = playerSpawn.transform.position;
-            rb.transform.position = playerSpawn.transform.position;
-            currentHealth = maxHealth;
+            targetPosition = rb.transform.position;
+            isAlive = false;
+            deathPanel.SetActive(true);
         }
         healthBar.UpdateHealthBar((float)currentHealth, (float)maxHealth);
+    }
+
+    public void RespawnPlayer()
+    {
+        isRespawning = true;
+        print("respawn player clicked");
+        targetPosition = playerSpawn.transform.position;
+        rb.transform.position = playerSpawn.transform.position;
+        currentHealth = maxHealth;
+        healthBar.UpdateHealthBar((float)currentHealth, (float)maxHealth);
+        deathPanel.SetActive(false);
+        isAlive = true;
+        StartCoroutine(ResetRespawnTag());
     }
 }
