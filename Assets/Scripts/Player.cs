@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     [SerializeField] private int damage = 5;
     [SerializeField] private float attackDuration = 1f;
     [SerializeField] private int levelUpTextDuration = 3;
+    private float damageTextDuration = 2;
 
     private bool isAttacking = false;
     private bool isRespawning = false;
@@ -40,6 +41,8 @@ public class Player : MonoBehaviour
     public Button respawnButton;
     public TextMeshProUGUI levelUpText;
     public TextMeshProUGUI levelText;
+    [SerializeField] private TextMeshProUGUI damageText;
+
 
     void Start()
     {
@@ -178,6 +181,14 @@ public class Player : MonoBehaviour
         if (levelUpText) levelUpText.enabled = false;
     }
 
+    IEnumerator ResetDamageText()
+    {
+        // Delay for the duration of the attack animation or as needed
+        // yield return new WaitForSeconds(attackDuration)(/*duration of the attack animation*/);
+        yield return new WaitForSeconds(damageTextDuration);
+        damageText.text = ""; // Reset the flag to indicate that the attack has finished
+    }
+
     private void Move()
     {
         animator.SetTrigger("move");
@@ -201,6 +212,9 @@ public class Player : MonoBehaviour
             deathPanel?.SetActive(true);
         }
         healthBar?.UpdateHealthBar((float)currentHealth, (float)maxHealth);
+
+        damageText.text = damage.ToString();
+        StartCoroutine(ResetDamageText());
     }
 
     public void RespawnPlayer()
