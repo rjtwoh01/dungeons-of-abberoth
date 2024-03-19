@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -26,6 +27,7 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private int damage = 5;
 
+    public int xp = 25;
 
     private Animator animator;
 
@@ -52,6 +54,14 @@ public class Enemy : MonoBehaviour
         healthBar.UpdateHealthBar((float)currentHealth, (float)maxHealth);
         if (currentHealth <= 0)
         {
+            if (target != null)
+            {
+                Player playerScript = target.GetComponent<Player>();
+                if (playerScript != null && playerScript.isAlive)
+                {
+                    playerScript.AddXp(xp);
+                }
+            }
             Destroy(gameObject);
         }
     }

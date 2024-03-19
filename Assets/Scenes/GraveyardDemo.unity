@@ -3453,7 +3453,7 @@ PrefabInstance:
     - target: {fileID: 3818270727248853085, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
       propertyPath: target
       value: 
-      objectReference: {fileID: 1477532771}
+      objectReference: {fileID: 8177105882455366922}
     - target: {fileID: 3818270727248853085, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
       propertyPath: attackDuration
       value: 3
@@ -3667,6 +3667,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 14003842465494778, guid: 16f47e85678599842821cc95b0cdf6d0, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 14003842465494778, guid: 16f47e85678599842821cc95b0cdf6d0, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2084853418378495717, guid: 16f47e85678599842821cc95b0cdf6d0, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

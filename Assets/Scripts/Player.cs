@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
     private int currentHealth;
 
     private HealthBar healthBar;
+    private XpBar xpBar;
 
     public GameObject playerSpawn;
 
@@ -33,6 +35,14 @@ public class Player : MonoBehaviour
     public Button respawnButton; // Reference to the respawn button in the death panel
 
     public bool isAlive = true;
+
+    public int xp = 0;
+    public int level = 1;
+    public int xpNeededToLevel = 100;
+
+    [SerializeField]
+    private TextMeshProUGUI levelUpText;
+    private int levelUpTextDuration = 3;
 
     // Start is called before the first frame update
     void Start()
@@ -58,7 +68,10 @@ public class Player : MonoBehaviour
 
         currentHealth = maxHealth;
         healthBar = GetComponentInChildren<HealthBar>();
+        xpBar = GetComponentInChildren<XpBar>();
         healthBar.UpdateHealthBar((float)currentHealth, (float)maxHealth);
+        xpBar.UpdateXpBar(xp, xpNeededToLevel);
+        if (levelUpText) levelUpText.enabled = false;
     }
 
     // Update is called once per frame
@@ -127,6 +140,15 @@ public class Player : MonoBehaviour
         isRespawning = false; // Reset the flag to indicate that the attack has finished
     }
 
+    IEnumerator ResetLevelUpText()
+    {
+        // Delay for the duration of the attack animation or as needed
+        // yield return new WaitForSeconds(attackDuration)(/*duration of the attack animation*/);
+        yield return new WaitForSecondsRealtime(levelUpTextDuration);
+        print("should disable levelup text");
+        if (levelUpText) levelUpText.enabled = false; // Reset the flag to indicate that the attack has finished
+    }
+
     private void Move()
     {
         animator.SetTrigger("move");
@@ -165,5 +187,24 @@ public class Player : MonoBehaviour
         deathPanel.SetActive(false);
         isAlive = true;
         StartCoroutine(ResetRespawnTag());
+    }
+
+    public void AddXp(int newXp)
+    {
+        if (xp + newXp >= xpNeededToLevel)
+        {
+            level++;
+            xp = newXp - (xpNeededToLevel - xp);
+            xpNeededToLevel = Convert.ToInt32(Math.Ceiling(1.5 * level)) + 100;
+
+            if (levelUpText) levelUpText.enabled = true;
+            StartCoroutine(ResetLevelUpText());
+        }
+        else
+        {
+            xp += newXp;
+        }
+
+        xpBar.UpdateXpBar(xp, xpNeededToLevel);
     }
 }
