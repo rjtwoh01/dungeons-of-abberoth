@@ -4362,10 +4362,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3818270727248853085, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 8177105882455366922}
     - target: {fileID: 8345230802118812926, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -4590,6 +4586,10 @@ PrefabInstance:
       propertyPath: viewDistance
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 4949249426891980815, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -1.7
+      objectReference: {fileID: 0}
     - target: {fileID: 5848022333665457603, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
       propertyPath: m_SizeDelta.x
       value: 149.12
@@ -4757,11 +4757,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 16f47e85678599842821cc95b0cdf6d0, type: 3}
---- !u!1 &8177105882455366922 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5280796748788642590, guid: 16f47e85678599842821cc95b0cdf6d0, type: 3}
-  m_PrefabInstance: {fileID: 8177105882455366921}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -34,6 +34,8 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     private TextMeshProUGUI levelText;
+    [SerializeField] private TextMeshProUGUI damageText;
+    private float damageTextDuration = 2;
 
     // Start is called before the first frame update
     void Start()
@@ -67,6 +69,8 @@ public class Enemy : MonoBehaviour
         currentHealth = currentHealth - damage;
         print("health: " + currentHealth);
         healthBar.UpdateHealthBar((float)currentHealth, (float)maxHealth);
+        damageText.text = damage.ToString();
+        StartCoroutine(ResetDamageText());
         if (currentHealth <= 0)
         {
             if (target != null)
@@ -106,6 +110,14 @@ public class Enemy : MonoBehaviour
         // yield return new WaitForSeconds(attackDuration)(/*duration of the attack animation*/);
         yield return new WaitForSeconds(attackDuration);
         isAttacking = false; // Reset the flag to indicate that the attack has finished
+    }
+
+    IEnumerator ResetDamageText()
+    {
+        // Delay for the duration of the attack animation or as needed
+        // yield return new WaitForSeconds(attackDuration)(/*duration of the attack animation*/);
+        yield return new WaitForSeconds(damageTextDuration);
+        damageText.text = ""; // Reset the flag to indicate that the attack has finished
     }
 
     // Update is called once per frame
