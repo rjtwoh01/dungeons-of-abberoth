@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -13,12 +14,15 @@ public class Player : MonoBehaviour
     public int level = 1;
     public int xpNeededToLevel = 100;
     public bool isAlive = true;
+    public List<Item> inventory = new List<Item>();
+    public int potionCount = 0;
 
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private int maxMana = 100;
     [SerializeField] private int damage = 5;
     [SerializeField] private float attackDuration = 1f;
     [SerializeField] private int levelUpTextDuration = 3;
+    [SerializeField] private int potionHealAmount = 25; //percentage of life
     private float damageTextDuration = 2;
 
     private bool isAttacking = false;
@@ -42,6 +46,7 @@ public class Player : MonoBehaviour
     public TextMeshProUGUI levelUpText;
     public TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI damageText;
+    [SerializeField] private TextMeshProUGUI potionText;
 
 
     void Start()
@@ -57,9 +62,12 @@ public class Player : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0))
                 Attack();
             else if (Input.GetKey(KeyCode.Mouse0))
-                HandleAttack(false);
+                HandleClick(false);
             else if (Input.GetKey(KeyCode.Mouse1) && currentMana >= 25)
-                HandleAttack(true);
+                HandleClick(true);
+            else if (Input.GetKey(KeyCode.Q)) {
+                TakePotion();
+            }
         }
 
         rb.transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
@@ -88,6 +96,7 @@ public class Player : MonoBehaviour
 
         if (levelUpText) levelUpText.enabled = false;
         if (levelText) levelText.text = level.ToString();
+        if (potionText) potionText.text = potionCount.ToString();
 
         healthBar = GetComponentInChildren<HealthBar>();
         xpBar = GetComponentInChildren<XpBar>();
@@ -119,7 +128,7 @@ public class Player : MonoBehaviour
         StartCoroutine(ResetAttackFlag());
     }
 
-    private void HandleAttack(bool isSpecialAttack)
+    private void HandleClick(bool isSpecialAttack)
     {
         bool didAttack = false;
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -136,6 +145,10 @@ public class Player : MonoBehaviour
                 else
                     Attack(enemy);
                 didAttack = true;
+            } else if (hit.transform.CompareTag("Item") && currentDistance <= attackRadius) {
+                GameObject item = hit.collider.gameObject;
+                print(item);
+                PickUpItem(item);
             }
         }
 
@@ -196,6 +209,24 @@ public class Player : MonoBehaviour
         targetPosition.z = 0f;
     }
 
+    private void PickUpItem(GameObject item)
+    {
+        if (item != null)
+        {
+            Item itemScript = item.GetComponent<Item>();
+            if (itemScript != null)
+            {
+                if (itemScript.itemType == ItemType.Potion)
+                { // Corrected this line
+                    potionCount += 1;
+                    if (potionText) potionText.text = potionCount.ToString();
+                    itemScript.DestroyItem();
+                    print("current potion count: " + potionCount);
+                }
+            }
+        }
+    }
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         rb.velocity = Vector2.zero;
@@ -215,6 +246,18 @@ public class Player : MonoBehaviour
 
         damageText.text = damage.ToString();
         StartCoroutine(ResetDamageText());
+    }
+
+    void TakePotion() {
+        if (potionCount != 0) {
+            potionCount -= 1;
+            if (potionCount <= 0) potionCount = 0;
+            int healAmount = (int)Math.Ceiling((double)potionHealAmount / 100 * maxHealth); //x% of max health
+            currentHealth += healAmount;
+            if (currentHealth >= maxHealth) currentHealth = maxHealth;
+            if (potionText) potionText.text = potionCount.ToString();
+            healthBar?.UpdateHealthBar(currentHealth, maxHealth);
+        }
     }
 
     public void RespawnPlayer()
