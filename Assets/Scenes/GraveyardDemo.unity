@@ -4510,6 +4510,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 746635645018547939, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
+      propertyPath: m_Size.y
+      value: 0.529151
+      objectReference: {fileID: 0}
+    - target: {fileID: 746635645018547939, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 746635645018547939, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.24778107
+      objectReference: {fileID: 0}
     - target: {fileID: 1790463158902590964, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
       propertyPath: m_Name
       value: EnemyCat (4)
@@ -4612,6 +4624,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8345230802118812926, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8657841651003213889, guid: 4692913af79b7514e8d359cc3d438e15, type: 3}
+      propertyPath: m_SpriteSortPoint
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
