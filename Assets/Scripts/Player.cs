@@ -65,7 +65,8 @@ public class Player : MonoBehaviour
                 HandleClick(false);
             else if (Input.GetKey(KeyCode.Mouse1) && currentMana >= 25)
                 HandleClick(true);
-            else if (Input.GetKey(KeyCode.Q)) {
+            else if (Input.GetKey(KeyCode.Q))
+            {
                 TakePotion();
             }
         }
@@ -145,7 +146,9 @@ public class Player : MonoBehaviour
                 else
                     Attack(enemy);
                 didAttack = true;
-            } else if (hit.transform.CompareTag("Item") && currentDistance <= attackRadius) {
+            }
+            else if (hit.transform.CompareTag("Item") && currentDistance <= attackRadius)
+            {
                 GameObject item = hit.collider.gameObject;
                 print(item);
                 PickUpItem(item);
@@ -248,8 +251,10 @@ public class Player : MonoBehaviour
         StartCoroutine(ResetDamageText());
     }
 
-    void TakePotion() {
-        if (potionCount != 0) {
+    void TakePotion()
+    {
+        if (potionCount != 0)
+        {
             potionCount -= 1;
             if (potionCount <= 0) potionCount = 0;
             int healAmount = (int)Math.Ceiling((double)potionHealAmount / 100 * maxHealth); //x% of max health
